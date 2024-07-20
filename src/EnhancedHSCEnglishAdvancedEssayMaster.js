@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
+import './EnhancedHSCEnglishAdvancedEssayMaster.css';
 const modules = [
   {
     name: "Common Module: Texts and Human Experiences",
@@ -111,143 +105,114 @@ const EnhancedHSCEnglishAdvancedEssayMaster = () => {
     switch (gameState) {
       case 'start':
         return (
-          <Card>
-            <CardHeader>
-              <CardTitle>HSC English Advanced Essay Master</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Select onValueChange={(value) => setCurrentModule(modules[parseInt(value)])}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a module" />
-                </SelectTrigger>
-                <SelectContent>
-                  {modules.map((module, index) => (
-                    <SelectItem key={index} value={index.toString()}>{module.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button onClick={startExercise} className="mt-4" disabled={!currentModule}>Start Exercise</Button>
-            </CardContent>
-          </Card>
+          <div className="card">
+            <h2>HSC English Advanced Essay Master</h2>
+            <select onChange={(e) => setCurrentModule(modules[parseInt(e.target.value)])}>
+              <option value="">Select a module</option>
+              {modules.map((module, index) => (
+                <option key={index} value={index}>{module.name}</option>
+              ))}
+            </select>
+            <button onClick={startExercise} disabled={!currentModule}>Start Exercise</button>
+          </div>
         );
       case 'ideaGeneration':
         return (
-          <Card>
-            <CardHeader>
-              <CardTitle>Idea Generation</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p><strong>Prompt:</strong> {currentPrompt}</p>
-              <p><strong>Key Concepts:</strong> {currentModule.concepts.join(', ')}</p>
-              <Input 
-                placeholder="Enter an idea" 
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    setIdeaList([...ideaList, e.target.value]);
-                    e.target.value = '';
-                  }
-                }}
-              />
-              <ul className="mt-2">
-                {ideaList.map((idea, index) => (
-                  <li key={index}>{idea}</li>
-                ))}
-              </ul>
-              <Button onClick={() => setGameState('thesisFormation')} className="mt-4">Next: Thesis Formation</Button>
-            </CardContent>
-          </Card>
+          <div className="card">
+            <h2>Idea Generation</h2>
+            <p><strong>Prompt:</strong> {currentPrompt}</p>
+            <p><strong>Key Concepts:</strong> {currentModule.concepts.join(', ')}</p>
+            <input 
+              type="text"
+              placeholder="Enter an idea" 
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  setIdeaList([...ideaList, e.target.value]);
+                  e.target.value = '';
+                }
+              }}
+            />
+            <ul>
+              {ideaList.map((idea, index) => (
+                <li key={index}>{idea}</li>
+              ))}
+            </ul>
+            <button onClick={() => setGameState('thesisFormation')}>Next: Thesis Formation</button>
+          </div>
         );
       case 'thesisFormation':
         return (
-          <Card>
-            <CardHeader>
-              <CardTitle>Thesis Formation</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p><strong>Prompt:</strong> {currentPrompt}</p>
-              <Textarea 
-                placeholder="Write your thesis sentence here" 
-                value={thesisSentence}
-                onChange={(e) => setThesisSentence(e.target.value)}
-                rows={3}
-              />
-              <Button onClick={() => setGameState('topicSentences')} className="mt-4">Next: Topic Sentences</Button>
-            </CardContent>
-          </Card>
+          <div className="card">
+            <h2>Thesis Formation</h2>
+            <p><strong>Prompt:</strong> {currentPrompt}</p>
+            <textarea 
+              placeholder="Write your thesis sentence here" 
+              value={thesisSentence}
+              onChange={(e) => setThesisSentence(e.target.value)}
+              rows={3}
+            />
+            <button onClick={() => setGameState('topicSentences')}>Next: Topic Sentences</button>
+          </div>
         );
       case 'topicSentences':
         return (
-          <Card>
-            <CardHeader>
-              <CardTitle>Topic Sentences</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p><strong>Thesis:</strong> {thesisSentence}</p>
-              {topicSentences.map((sentence, index) => (
-                <Textarea 
-                  key={index}
-                  placeholder={`Topic sentence for paragraph ${index + 1}`}
-                  value={sentence}
-                  onChange={(e) => {
-                    const newTopicSentences = [...topicSentences];
-                    newTopicSentences[index] = e.target.value;
-                    setTopicSentences(newTopicSentences);
-                  }}
-                  className="mt-2"
-                  rows={2}
-                />
-              ))}
-              <Button onClick={startEssay} className="mt-4">Start Full Essay</Button>
-            </CardContent>
-          </Card>
+          <div className="card">
+            <h2>Topic Sentences</h2>
+            <p><strong>Thesis:</strong> {thesisSentence}</p>
+            {topicSentences.map((sentence, index) => (
+              <textarea 
+                key={index}
+                placeholder={`Topic sentence for paragraph ${index + 1}`}
+                value={sentence}
+                onChange={(e) => {
+                  const newTopicSentences = [...topicSentences];
+                  newTopicSentences[index] = e.target.value;
+                  setTopicSentences(newTopicSentences);
+                }}
+                rows={2}
+              />
+            ))}
+            <button onClick={startEssay}>Start Full Essay</button>
+          </div>
         );
       case 'writing':
         return (
-          <Card>
-            <CardHeader>
-              <CardTitle>{currentModule.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p><strong>Prompt:</strong> {currentPrompt}</p>
-              <p><strong>Thesis:</strong> {thesisSentence}</p>
-              <p><strong>Topic Sentences:</strong></p>
-              <ol>
-                {topicSentences.map((sentence, index) => (
-                  <li key={index}>{sentence}</li>
-                ))}
-              </ol>
-              <Textarea 
-                placeholder="Write your essay here" 
-                value={essay}
-                onChange={(e) => setEssay(e.target.value)}
-                rows={15}
-                className="mt-4"
-              />
-              <Button onClick={endEssay} className="mt-4">Finish Essay</Button>
-            </CardContent>
-          </Card>
+          <div className="card">
+            <h2>{currentModule.name}</h2>
+            <p><strong>Prompt:</strong> {currentPrompt}</p>
+            <p><strong>Thesis:</strong> {thesisSentence}</p>
+            <p><strong>Topic Sentences:</strong></p>
+            <ol>
+              {topicSentences.map((sentence, index) => (
+                <li key={index}>{sentence}</li>
+              ))}
+            </ol>
+            <textarea 
+              placeholder="Write your essay here" 
+              value={essay}
+              onChange={(e) => setEssay(e.target.value)}
+              rows={15}
+            />
+            <button onClick={endEssay}>Finish Essay</button>
+          </div>
         );
       case 'feedback':
         return (
-          <Card>
-            <CardHeader>
-              <CardTitle>Feedback</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>{feedback}</p>
-              <Button onClick={() => setGameState('start')} className="mt-4">Start New Exercise</Button>
-            </CardContent>
-          </Card>
+          <div className="card">
+            <h2>Feedback</h2>
+            <p>{feedback}</p>
+            <button onClick={() => setGameState('start')}>Start New Exercise</button>
+          </div>
         );
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container">
       {renderGameState()}
       {gameState === 'writing' && (
-        <div className="mt-4">
-          <Progress value={(timeLeft / 2400) * 100} />
+        <div className="timer">
+          <progress value={timeLeft} max={2400} />
           <p>Time left: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</p>
         </div>
       )}
